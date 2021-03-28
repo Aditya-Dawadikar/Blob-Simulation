@@ -1,8 +1,8 @@
 var foodControllerObject = {
     food: {
         color: "red",
-        size: 4,
-        clearSize: 5,
+        size: 2,
+        clearSize: 3,
     },
 }
 

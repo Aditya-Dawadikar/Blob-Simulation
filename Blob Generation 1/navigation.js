@@ -4,6 +4,13 @@ var closestPoint = {
 }
 
 function sense() {
+
+    if (coordinates.length == 0) {
+        console.log("food extinguished")
+        console.log("Strength:" + animalControllerObject.vitals.strength);
+        return;
+    }
+
     //find if a point lies inside the circle
     var x, y;
 
@@ -20,9 +27,7 @@ function sense() {
     }
 
     if (inRange.length == 0) {
-        //take a random decision
-        console.log("no food in range");
-        return
+        inRange.push(coordinates[0]);
     }
 
     //find the closest point
@@ -37,42 +42,48 @@ function sense() {
 
     console.log(closestPoint);
     // console.log(min);
-    drawPoint(closestPoint.x, closestPoint.y, 7, "blue")
+    drawPoint(closestPoint.x, closestPoint.y, foodControllerObject.food.size, "blue")
 
     //get direction
-    // if (closestPoint.x > animalControllerObject.coordinates.x && closestPoint.y == animalControllerObject.coordinates.y) {
-    //     console.log("1");
-    //     moveRight(closestPoint);
-    // } else if (closestPoint.x < animalControllerObject.coordinates.x && closestPoint.y == animalControllerObject.coordinates.y) {
-    //     console.log("2");
-    //     moveLeft(closestPoint);
-    // }
-    // if (closestPoint.x == animalControllerObject.coordinates.x && closestPoint.y < animalControllerObject.coordinates.y) {
-    //     console.log("3");
-    //     moveUp(closestPoint);
-    // } else if (closestPoint.x == animalControllerObject.coordinates.x && closestPoint.y > animalControllerObject.coordinates.y) {
-    //     console.log("4");
-    //     moveDown(closestPoint);
-    // }
 
-    if (closestPoint.x > animalControllerObject.coordinates.x) {
+    if (closestPoint.x > animalControllerObject.coordinates.x && closestPoint.y == animalControllerObject.coordinates.y) {
         setTimeout(() => {
             moveRight(closestPoint);
-        }, 100);
+        }, controllerObject.navigation.delay);
 
-    } else if (closestPoint.x < animalControllerObject.coordinates.x) {
+    } else if (closestPoint.x < animalControllerObject.coordinates.x && closestPoint.y == animalControllerObject.coordinates.y) {
         setTimeout(() => {
             moveLeft(closestPoint);
-        }, 100);
+        }, controllerObject.navigation.delay);
     }
-    if (closestPoint.x == animalControllerObject.coordinates.x) {
+    if (closestPoint.x == animalControllerObject.coordinates.x && closestPoint.y < animalControllerObject.coordinates.y) {
         setTimeout(() => {
             moveUp(closestPoint);
-        }, 100);
-    } else if (closestPoint.x == animalControllerObject.coordinates.x) {
+        }, controllerObject.navigation.delay);
+    } else if (closestPoint.x == animalControllerObject.coordinates.x && closestPoint.y > animalControllerObject.coordinates.y) {
         setTimeout(() => {
             moveDown(closestPoint);
-        }, 100);
+        }, controllerObject.navigation.delay);
+    }
+    //diagonal
+    if (closestPoint.x > animalControllerObject.coordinates.x && closestPoint.y < animalControllerObject.coordinates.y) {
+        setTimeout(() => {
+            moveUpRight(closestPoint);
+        }, controllerObject.navigation.delay);
+
+    } else if (closestPoint.x < animalControllerObject.coordinates.x && closestPoint.y < animalControllerObject.coordinates.y) {
+        setTimeout(() => {
+            moveUpLeft(closestPoint);
+        }, controllerObject.navigation.delay);
+    }
+    if (closestPoint.x > animalControllerObject.coordinates.x && closestPoint.y > animalControllerObject.coordinates.y) {
+        setTimeout(() => {
+            moveDownRight(closestPoint);
+        }, controllerObject.navigation.delay);
+    } else if (closestPoint.x < animalControllerObject.coordinates.x && closestPoint.y > animalControllerObject.coordinates.y) {
+        setTimeout(() => {
+            moveDownLeft(closestPoint);
+        }, controllerObject.navigation.delay);
     }
 }
 

@@ -1,8 +1,8 @@
 var animalControllerObject = {
     animal: {
-        size: 10,
-        clearSize: 12,
-        color: "green",
+        size: 4,
+        clearSize: 5,
+        color: "rgba(17, 173, 41, 0.5)",
         time: 5, //milliseconds
         step: 5 //pixels
     },
@@ -11,8 +11,16 @@ var animalControllerObject = {
         y: 0
     },
     navigation: {
-        range: 50,
+        range: 10,
         color: "rgba(52, 235, 195, 0.5)"
+    },
+    vitals: {
+        strength: 0
+    },
+    meta: {
+        growSize: 1,
+        rangeGrowth: 2,
+        strengthIntervalForGrowth: 10
     }
 }
 
@@ -43,69 +51,12 @@ function rePaint() {
     drawPoint(animalControllerObject.coordinates.x, animalControllerObject.coordinates.y, animalControllerObject.animal.size, animalControllerObject.animal.color);
 }
 
-/*
-function moveRight() {
-    var i = 0;
-    var si = setInterval(function() {
-        i++;
-        animalControllerObject.coordinates.x = animalControllerObject.coordinates.x + 1;
-        rePaint();
-        if (i == animalControllerObject.animal.step) {
-            clearInterval(si);
-        }
-    }, animalControllerObject.animal.time);
-}
-
-function moveLeft() {
-    var i = 0;
-    var si = setInterval(function() {
-        i++;
-        animalControllerObject.coordinates.x = animalControllerObject.coordinates.x - 1;
-        rePaint();
-        if (i == animalControllerObject.animal.step) {
-            clearInterval(si);
-        }
-    }, animalControllerObject.animal.time);
-}
-
-function moveDown() {
-    var i = 0;
-    var si = setInterval(function() {
-        i++;
-        animalControllerObject.coordinates.y = animalControllerObject.coordinates.y + 1;
-        rePaint();
-        if (i == animalControllerObject.animal.step) {
-            clearInterval(si);
-        }
-    }, animalControllerObject.animal.time);
-}
-
-function moveUp() {
-    var i = 0;
-    var si = setInterval(function() {
-        i++;
-        animalControllerObject.coordinates.y = animalControllerObject.coordinates.y - 1;
-        rePaint();
-        if (i == animalControllerObject.animal.step) {
-            clearInterval(si);
-        }
-    }, animalControllerObject.animal.time);
-}
-*/
-
-
-
 //something to use later for optimization
 function moveRight(destination) {
     clearAnimal();
     animalControllerObject.coordinates.x = Math.min(animalControllerObject.coordinates.x + animalControllerObject.animal.step, destination.x);
     //base case: if we have reached
-    if ((animalControllerObject.coordinates.x == destination.x) && (animalControllerObject.coordinates.y == destination.y)) {
-        //eating logic
-        var index = coordinates.indexOf(destination);
-        coordinates.splice(index, 1);
-        clearFood(destination)
-    }
+    baseCase(destination);
     rePaint();
     //else recurssion 
     sense()
@@ -115,12 +66,7 @@ function moveLeft(destination) {
     clearAnimal();
     animalControllerObject.coordinates.x = Math.max(animalControllerObject.coordinates.x - animalControllerObject.animal.step, destination.x);
     //base case: if we have reached
-    if ((animalControllerObject.coordinates.x == destination.x) && (animalControllerObject.coordinates.y == destination.y)) {
-        //eating logic
-        var index = coordinates.indexOf(destination);
-        coordinates.splice(index, 1);
-        clearFood(destination)
-    }
+    baseCase(destination);
     rePaint();
     //else recurssion 
     sense()
@@ -130,12 +76,7 @@ function moveUp(destination) {
     clearAnimal();
     animalControllerObject.coordinates.y = Math.max(animalControllerObject.coordinates.y - animalControllerObject.animal.step, destination.y);
     //base case: if we have reached
-    if ((animalControllerObject.coordinates.x == destination.x) && (animalControllerObject.coordinates.y == destination.y)) {
-        //eating logic
-        var index = coordinates.indexOf(destination);
-        coordinates.splice(index, 1);
-        clearFood(destination)
-    }
+    baseCase(destination);
     rePaint();
     //else recurssion 
     sense()
@@ -145,13 +86,71 @@ function moveDown(destination) {
     clearAnimal();
     animalControllerObject.coordinates.y = Math.min(animalControllerObject.coordinates.y + animalControllerObject.animal.step, destination.y);
     //base case: if we have reached
+    baseCase(destination);
+    rePaint();
+    //else recurssion 
+    sense()
+}
+
+function moveUpRight(destination) {
+    clearAnimal();
+    animalControllerObject.coordinates.x = Math.min(animalControllerObject.coordinates.x + animalControllerObject.animal.step, destination.x);
+    animalControllerObject.coordinates.y = Math.max(animalControllerObject.coordinates.y - animalControllerObject.animal.step, destination.y);
+    //base case: if we have reached
+    baseCase(destination);
+    rePaint();
+    //else recurssion 
+    sense()
+}
+
+function moveUpLeft(destination) {
+    clearAnimal();
+    animalControllerObject.coordinates.x = Math.max(animalControllerObject.coordinates.x - animalControllerObject.animal.step, destination.x);
+    animalControllerObject.coordinates.y = Math.max(animalControllerObject.coordinates.y - animalControllerObject.animal.step, destination.y);
+    //base case: if we have reached
+    baseCase(destination);
+    rePaint();
+    //else recurssion 
+    sense()
+}
+
+function moveDownRight(destination) {
+    clearAnimal();
+    animalControllerObject.coordinates.x = Math.min(animalControllerObject.coordinates.x + animalControllerObject.animal.step, destination.x);
+    animalControllerObject.coordinates.y = Math.min(animalControllerObject.coordinates.y + animalControllerObject.animal.step, destination.y);
+    //base case: if we have reached
+    baseCase(destination);
+    rePaint();
+    //else recurssion 
+    sense()
+}
+
+function moveDownLeft(destination) {
+    clearAnimal();
+    animalControllerObject.coordinates.x = Math.max(animalControllerObject.coordinates.x - animalControllerObject.animal.step, destination.x);
+    animalControllerObject.coordinates.y = Math.min(animalControllerObject.coordinates.y + animalControllerObject.animal.step, destination.y);
+    //base case: if we have reached
+    baseCase(destination);
+    rePaint();
+    //else recurssion 
+    sense()
+}
+
+function baseCase(destination) {
     if ((animalControllerObject.coordinates.x == destination.x) && (animalControllerObject.coordinates.y == destination.y)) {
         //eating logic
         var index = coordinates.indexOf(destination);
         coordinates.splice(index, 1);
         clearFood(destination)
+        animalControllerObject.vitals.strength++;
+        grow();
     }
-    rePaint();
-    //else recurssion 
-    sense()
+}
+
+function grow() {
+    if (animalControllerObject.vitals.strength % animalControllerObject.meta.strengthIntervalForGrowth == 0) {
+        animalControllerObject.animal.size += animalControllerObject.meta.growSize;
+        animalControllerObject.animal.clearSize += animalControllerObject.meta.growSize;
+        animalControllerObject.navigation.range += animalControllerObject.meta.rangeGrowth;
+    }
 }

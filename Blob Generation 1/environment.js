@@ -2,13 +2,16 @@ var controllerObject = {
     field: {
         minX: 0,
         minY: 0,
-        maxX: 500,
-        maxY: 500,
+        maxX: 200,
+        maxY: 200,
         fieldColor: "white"
     },
     environment: {
-        foodCount: 500,
+        foodCount: 100,
         animalCount: 1
+    },
+    navigation: {
+        delay: 100
     }
 }
 
@@ -45,4 +48,8 @@ function clearPoint(x, y, pointSize, pointColor) {
 function clearCanvas() {
     var ctx = document.getElementById("canvas").getContext("2d");
     ctx.clearRect(0, 0, controllerObject.field.maxX, controllerObject.field.maxY);
+}
+
+function reset() {
+    location.reload();
 }
